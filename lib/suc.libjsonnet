@@ -1,0 +1,30 @@
+local kap = import 'lib/kapitan.libjsonnet';
+local kube = import 'lib/kube.libjsonnet';
+local inv = kap.inventory();
+local params = inv.parameters.system_upgrade_controller;
+{
+
+  Plan(name, channel, label_selectors, concurrency, image, push_gateway, command): kube._Object("upgrade.cattle.io/v1", "Plan", name) {
+    metadata+: {
+      namespace: params.namespace,
+      labels+: {
+        'app.kubernetes.io/managed-by': 'syn',
+      },
+    },
+    spec: {
+      concurrency: concurrency,
+      nodeSelector: {
+        matchExpressions: label_selectors,
+      },
+      serviceAccountName: "system-upgrade",
+      drain: {
+        force: true,
+      },
+      channel: channel,
+      upgrade: {
+        image: image,
+        command: [command, push_gateway]
+      },
+    },
+  }
+}

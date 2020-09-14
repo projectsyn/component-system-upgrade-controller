@@ -1,3 +1,30 @@
 parameters:
   system_upgrade_controller:
+    backoff_limit: "3"
+    controller_threads: "2"
+    debug_logging: 'false'
+    job_deadline_seconds: "900"
+    job_image_pull_policy: "Always"
+    job_kubectl_image: rancher/kubectl:v1.17.0
+    job_privileged: "true"
+    job_ttl_after_finish: "900"
     namespace: syn-system-upgrade-controller
+    plan_polling_interval: "15m"
+    suc_image: rancher/system-upgrade-controller:v0.5.0
+    floodgate_url: https://floodgate.syn.vshn.net/
+    disable_grafana_dashboard: false
+    plans: []  # TBD
+      # - name: test
+      #   concurrency: 1
+      #   image: kidswiss/ubuntu-update
+      #   command: /scripts/run.sh
+      #   push_gateway: 10.43.209.108:9091
+      #   channel:  http://192.168.5.42:8091/
+      #   hour: 22 # is not applied if channel is set
+      #   day: 3 # is not applied if channel is set
+      #   label_selectors:
+      #     - {key: plan.upgrade.cattle.io/bionic, operator: Exists}
+      # - name: another
+      #   channel: something_else
+      #   label_selectors:
+      #     - tbd2

@@ -1,6 +1,6 @@
-# Commodore Component: system-upgrade-controller
+# Commodore Component: System Upgrade Controller
 
-This is a [Commodore][commodore] Component for system-upgrade-controller.
+This is a [Commodore][commodore] Component for System Upgrade Controller.
 
 This repository is part of Project Syn.
 For documentation on Project Syn and this component, see https://syn.tools.
