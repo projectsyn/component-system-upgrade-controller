@@ -1,0 +1,5 @@
+= system-upgrade-controller
+
+system-upgrade-controller is a Commodore component to manage system-upgrade-controller.
+
+See the xref:references/parameters.adoc[parameters] reference for further details.
