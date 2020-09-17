@@ -16,7 +16,7 @@ parameters:
     plans: []  # TBD
       # - name: test
       #   concurrency: 1
-      #   image: kidswiss/ubuntu-update
+      #   image: docker.io/projectsyn/suc-ubuntu-bionic
       #   command: /scripts/run.sh
       #   push_gateway: 10.43.209.108:9091
       #   channel:  http://192.168.5.42:8091/
