@@ -187,9 +187,8 @@ local plan = [
   local channel = (
     if std.objectHas(p, 'channel') then [
       p.channel,
-    ] else [
-      params.floodgate_url + p.day + '/' + p.hour,
-    ]
+    ] else
+      params.floodgate_url + 'window/' + p.day + '/' + p.hour
   );
 
   suc.Plan(p.name, channel, p.label_selectors, p.concurrency, p.image, p.push_gateway, p.command)
