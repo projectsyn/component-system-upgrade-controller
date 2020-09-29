@@ -191,7 +191,7 @@ local plan = [
       params.floodgate_url + 'window/' + p.day + '/' + p.hour
   );
 
-  suc.Plan(p.name, channel, p.label_selectors, p.concurrency, p.image, p.push_gateway, p.command)
+  suc.Plan(p.name, channel, p.label_selectors, p.concurrency, p.tolerations, p.image, p.push_gateway, p.command)
   for p in params.plans
 ];
 

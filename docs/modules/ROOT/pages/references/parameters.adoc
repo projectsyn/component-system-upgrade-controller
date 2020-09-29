@@ -138,6 +138,9 @@ This overwrites the `channel` parameter.
 
 `label_selectors`: A node label to specify a node is patched using a specified channel.
 
+`tolerations`: Tolerations for the job pods.
+In example to run the jobs also on control plane nodes a taint is configured for etcd or control plane components.
+
 Example:
 ```
 parameters:
@@ -153,6 +156,11 @@ parameters:
         day: 3 # is not applied if channel is set
         label_selectors:
           - {key: plan.upgrade.cattle.io/focal, operator: Exists}
+        tolerations:
+          - key: node-role.kubernetes.io/controlplane
+            operator: Exists
+          - key: node-role.kubernetes.io/etcd
+            operator: Exists
       - name: system-upgrade-2
         channel: something_else
         label_selectors:

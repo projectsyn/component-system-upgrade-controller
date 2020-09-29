@@ -4,7 +4,7 @@ local inv = kap.inventory();
 local params = inv.parameters.system_upgrade_controller;
 {
 
-  Plan(name, channel, label_selectors, concurrency, image, push_gateway, command): kube._Object('upgrade.cattle.io/v1', 'Plan', name) {
+  Plan(name, channel, label_selectors, concurrency, tolerations, image, push_gateway, command): kube._Object('upgrade.cattle.io/v1', 'Plan', name) {
     metadata+: {
       namespace: params.namespace,
       labels+: {
@@ -17,6 +17,7 @@ local params = inv.parameters.system_upgrade_controller;
         matchExpressions: label_selectors,
       },
       serviceAccountName: 'system-upgrade',
+      tolerations: tolerations,
       drain: {
         force: true,
       },
