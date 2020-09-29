@@ -10,10 +10,153 @@ default:: `syn-system-upgrade-controller`
 
 The namespace in which to deploy this component.
 
+== `controller_threads`
 
-== Example
+[horizontal]
+type:: string
+default:: `2`
 
-[source,yaml]
-----
-namespace: example-namespace
-----
+The amount of threads System Upgrade Controller will run.
+
+== `plan_polling_interval`
+
+[horizontal]
+type:: string
+default:: `15m`
+
+The interval time the System Upgrade Controller check for plan execution.
+
+== `suc_image`
+
+[horizontal]
+type:: string
+default:: `rancher/system-upgrade-controller:v0.5.0`
+
+The System Upgrade Controller image used in the controller deployment.
+
+== `debug_logging`
+
+[horizontal]
+type:: string
+default:: `false`
+
+If the System Upgrade Controller will run in debug mode.
+
+== `floodgate_url`
+
+[horizontal]
+type:: string
+default:: `https://floodgate.syn.vshn.net/`
+
+The floodgate service URL being used.
+
+https://github.com/projectsyn/floodgate[Floodgate] is a Syn project providing inidividual System Upgrade Controller channels based on time conditions.
+
+== `disable_grafana_dashboard`
+
+[horizontal]
+type:: boolean
+default:: `false`
+
+If `true` it disables the Grafana dashboard.
+
+Used if the syn-sights Grafana components are not fully installed or the dashboard is not required at all.
+
+== `backoff_limit`
+
+[horizontal]
+type:: string
+default:: `3`
+
+The backoff limit for System Upgrade Controller jobs.
+
+== `job_deadline_seconds`
+
+[horizontal]
+type:: string
+default:: `900`
+
+The deadline for System Upgrade Controller jobs in seconds.
+
+== `job_image_pull_policy`
+
+[horizontal]
+type:: string
+default:: `Always`
+
+The image pull policy for System Upgrade Controller jobs.
+
+== `job_kubectl_image`
+
+[horizontal]
+type:: string
+default:: `rancher/kubectl:v1.17.0`
+
+The kubectl image the System Upgrade Controller uses in the jobs.
+
+== `job_privileged`
+
+[horizontal]
+type:: string
+default:: `true`
+
+If the System Upgrade Controller job does run in privileged mode.
+
+== `job_ttl_after_finish`
+
+[horizontal]
+type:: string
+default:: `900`
+
+The time in seconds the System Upgrade Controller jobs are kept after they are completed.
+
+== `plans`
+
+[horizontal]
+type:: list
+default:: `[]`
+
+Defines the parameters for an System Upgrade Controller plan.
+
+`name`: Name of the selected channel.
+
+`concurrency`: The amount of jobs can run simultaneously.
+
+`image`: Syn includes the https://github.com/projectsyn/system-upgrade-controller-package-upgrade[System Upgrade Controller OS Package Upgrade Script] which is available as container image on docker hub for https://hub.docker.com/r/projectsyn/suc-ubuntu-bionic[Ubuntu 18.04 (bionic)] and https://hub.docker.com/r/projectsyn/suc-ubuntu-focal/[Ubuntu 20.04 (focal)].
+
+`command`: In the case of the System Upgrade Controller OS Package Upgrade Script this is `/scripts/run.sh`.
+
+`push_gateway`: The syn-sights push gateway service as DNS name platform-prometheus-pushgateway.syn-synsights.svc:9091 or the direct service IP in example 10.43.209.108:9091.
+
+`channel`: A System Upgrade Controller compliant channel.
+
+`hour`: A Floodgate point in time 0..24 (hour).
+This overwrites the `channel` parameter.
+
+`day`: A Floodgate point in time 0=Sunday, 6=Saturday.
+This overwrites the `channel` parameter.
+
+`label_selectors`: A node label to specify a node is patched using a specified channel.
+
+Example:
+```
+parameters:
+  system_upgrade_controller:
+    plans:
+      - name: system-upgrade-1
+        concurrency: 1
+        image: docker.io/projectsyn/suc-ubuntu-focal
+        command: /scripts/run.sh
+        push_gateway: 10.43.209.108:9091
+        channel: http://192.168.5.42:8091/
+        hour: 22 # is not applied if channel is set
+        day: 3 # is not applied if channel is set
+        label_selectors:
+          - {key: plan.upgrade.cattle.io/focal, operator: Exists}
+      - name: system-upgrade-2
+        channel: something_else
+        label_selectors:
+          - tbd2
+```
+
+Check the https://github.com/rancher/system-upgrade-controller#example-plans[official documentation] for more background details.
