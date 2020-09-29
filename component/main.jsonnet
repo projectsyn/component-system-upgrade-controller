@@ -36,7 +36,7 @@ local configmap = kube.ConfigMap('default-controller-env') {
     SYSTEM_UPGRADE_CONTROLLER_DEBUG: params.debug_logging,
     SYSTEM_UPGRADE_CONTROLLER_THREADS: params.controller_threads,
     SYSTEM_UPGRADE_JOB_ACTIVE_DEADLINE_SECONDS: params.job_deadline_seconds,
-    SYSTEM_UPGRADE_JOB_BACKOFF_LIMIT: params.backoff_limit,
+    SYSTEM_UPGRADE_JOB_BACKOFF_LIMIT: params.job_backoff_limit,
     SYSTEM_UPGRADE_JOB_IMAGE_PULL_POLICY: params.job_image_pull_policy,
     SYSTEM_UPGRADE_JOB_KUBECTL_IMAGE: params.job_kubectl_image,
     SYSTEM_UPGRADE_JOB_PRIVILEGED: params.job_privileged,

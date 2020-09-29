@@ -7,5 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Index and reference documentation
+- Rename parameter backoff_limit to job_backoff_limit
 
 [Unreleased]: https://github.com/projectsyn/component-system-upgrade-controller/compare/v0.1.0...HEAD
