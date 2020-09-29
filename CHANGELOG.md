@@ -6,9 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-
-## [0.0.1] - 2020-09-29
-### Added
 - Index and reference documentation
 
 [Unreleased]: https://github.com/projectsyn/component-system-upgrade-controller/compare/v0.1.0...HEAD
