@@ -51,7 +51,7 @@ parameters:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
           - matchExpressions:
-            - key: node-role.kubernetes.io/master
+            - key: node-role.kubernetes.io/controlplane
               operator: In
               values:
               - "true"
