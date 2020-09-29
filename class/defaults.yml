@@ -2,6 +2,7 @@ parameters:
   system_upgrade_controller:
     backoff_limit: "3"
     controller_threads: "2"
+    affinity: {}
     debug_logging: 'false'
     job_deadline_seconds: "900"
     job_image_pull_policy: "Always"
