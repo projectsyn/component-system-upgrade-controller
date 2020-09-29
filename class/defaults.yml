@@ -13,18 +13,4 @@ parameters:
     suc_image: rancher/system-upgrade-controller:v0.5.0
     floodgate_url: https://floodgate.syn.vshn.net/
     disable_grafana_dashboard: false
-    plans: []  # TBD
-      # - name: test
-      #   concurrency: 1
-      #   image: docker.io/projectsyn/suc-ubuntu-bionic
-      #   command: /scripts/run.sh
-      #   push_gateway: 10.43.209.108:9091
-      #   channel:  http://192.168.5.42:8091/
-      #   hour: 22 # is not applied if channel is set
-      #   day: 3 # is not applied if channel is set
-      #   label_selectors:
-      #     - {key: plan.upgrade.cattle.io/bionic, operator: Exists}
-      # - name: another
-      #   channel: something_else
-      #   label_selectors:
-      #     - tbd2
+    plans: []
