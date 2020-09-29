@@ -7,6 +7,9 @@ local params = inv.parameters.system_upgrade_controller;
   Plan(name, channel, label_selectors, concurrency, tolerations, image, push_gateway, command): kube._Object('upgrade.cattle.io/v1', 'Plan', name) {
     metadata+: {
       namespace: params.namespace,
+      annotations+: {
+        'argocd.argoproj.io/sync-wave': '5',
+      },
       labels+: {
         'app.kubernetes.io/managed-by': 'syn',
       },
