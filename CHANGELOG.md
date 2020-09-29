@@ -12,6 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rename parameter backoff_limit to job_backoff_limit
 - Change parameters.cluster.dist to parameters.facts.distribution ([#7])
 
-[Unreleased]: https://github.com/projectsyn/component-system-upgrade-controller/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/projectsyn/component-system-upgrade-controller/compare/2606b0b...HEAD
 
 [#7]: https://github.com/projectsyn/component-system-upgrade-controller/pull/7
