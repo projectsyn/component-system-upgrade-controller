@@ -46,7 +46,7 @@ local configmap = kube.ConfigMap('default-controller-env') {
 };
 
 local extraVols =
-  if inv.parameters.cluster.dist == 'eks' then
+  if inv.parameters.facts.distribution == 'eks' then
     [{
       hostPath: {
         path: '/etc/pki',
@@ -57,7 +57,7 @@ local extraVols =
   else
     [];
 local extraVolMounts =
-  if inv.parameters.cluster.dist == 'eks' then
+  if inv.parameters.facts.distribution == 'eks' then
     [{
       mountPath: '/etc/pki',
       name: 'etc-pki',
