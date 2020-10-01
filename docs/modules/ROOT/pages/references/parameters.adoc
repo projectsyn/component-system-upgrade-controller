@@ -30,7 +30,7 @@ The interval time the System Upgrade Controller check for plan execution.
 
 [horizontal]
 type:: string
-default:: `rancher/system-upgrade-controller:v0.5.0`
+default:: `docker.io/rancher/system-upgrade-controller:v0.6.2`
 
 The System Upgrade Controller image used in the controller deployment.
 

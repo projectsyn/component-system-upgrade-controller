@@ -11,7 +11,7 @@ parameters:
     job_ttl_after_finish: "900"
     namespace: syn-system-upgrade-controller
     plan_polling_interval: "15m"
-    suc_image: rancher/system-upgrade-controller:v0.5.0
+    suc_image: docker.io/rancher/system-upgrade-controller:v0.6.2
     floodgate_url: https://floodgate.syn.vshn.net/
     disable_grafana_dashboard: false
     plans: []
