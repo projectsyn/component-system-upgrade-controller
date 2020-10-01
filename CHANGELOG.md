@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rename parameter backoff_limit to job_backoff_limit
 - Change parameters.cluster.dist to parameters.facts.distribution ([#7])
 - Add ArgoCD wave number to plan CRD object
+- Update the SUC image from v0.5 to docker.io/rancher/system-upgrade-controller:v0.6.2
 
 [Unreleased]: https://github.com/projectsyn/component-system-upgrade-controller/compare/2606b0b...HEAD
 
