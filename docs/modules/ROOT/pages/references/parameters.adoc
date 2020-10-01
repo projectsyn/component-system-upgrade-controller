@@ -62,7 +62,7 @@ If `true` it disables the Grafana dashboard.
 
 Used if the syn-sights Grafana components are not fully installed or the dashboard is not required at all.
 
-== `backoff_limit`
+== `job_backoff_limit`
 
 [horizontal]
 type:: string

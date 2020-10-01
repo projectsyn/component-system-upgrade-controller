@@ -1,8 +1,8 @@
 parameters:
   system_upgrade_controller:
-    backoff_limit: "3"
     controller_threads: "2"
     debug_logging: 'false'
+    job_backoff_limit: "3"
     job_deadline_seconds: "900"
     job_image_pull_policy: "Always"
     job_kubectl_image: rancher/kubectl:v1.17.0
