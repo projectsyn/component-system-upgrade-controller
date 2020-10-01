@@ -24,4 +24,9 @@ parameters:
         hour: 22
         label_selectors:
           - {key: plan.upgrade.cattle.io/focal, operator: Exists}
+        tolerations:
+          - key: node-role.kubernetes.io/controlplane
+            operator: Exists
+          - key: node-role.kubernetes.io/etcd
+            operator: Exists
 ```

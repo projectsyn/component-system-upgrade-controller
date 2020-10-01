@@ -65,29 +65,6 @@ local extraVolMounts =
   else
     [];
 
-local affinity =
-  if inv.parameters.cluster.dist == 'eks' then
-    {}
-  else
-    {
-      nodeAffinity: {
-        requiredDuringSchedulingIgnoredDuringExecution: {
-          nodeSelectorTerms: [
-            {
-              matchExpressions: [
-                {
-                  key: 'node-role.kubernetes.io/master',
-                  operator: 'In',
-                  values: [
-                    'true',
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      },
-    };
 local deployment = kube.Deployment('system-upgrade-controller') {
   metadata+: {
     namespace: params.namespace,
@@ -110,7 +87,7 @@ local deployment = kube.Deployment('system-upgrade-controller') {
         },
       },
       spec+: {
-        affinity: affinity,
+        affinity: params.affinity,
         containers: [
           {
             env: [
@@ -191,7 +168,7 @@ local plan = [
       params.floodgate_url + 'window/' + p.day + '/' + p.hour
   );
 
-  suc.Plan(p.name, channel, p.label_selectors, p.concurrency, p.image, p.push_gateway, p.command)
+  suc.Plan(p.name, channel, p.label_selectors, p.concurrency, p.tolerations, p.image, p.push_gateway, p.command)
   for p in params.plans
 ];
 

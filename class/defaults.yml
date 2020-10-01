@@ -1,6 +1,7 @@
 parameters:
   system_upgrade_controller:
     controller_threads: "2"
+    affinity: {}
     debug_logging: 'false'
     job_backoff_limit: "3"
     job_deadline_seconds: "900"
