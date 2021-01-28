@@ -162,9 +162,9 @@ local deployment = kube.Deployment('system-upgrade-controller') {
 local plan = [
 
   local channel = (
-    if std.objectHas(p, 'channel') then [
-      p.channel,
-    ] else
+    if std.objectHas(p, 'channel') then
+      p.channel
+    else
       params.floodgate_url + 'window/' + p.day + '/' + p.hour
   );
 

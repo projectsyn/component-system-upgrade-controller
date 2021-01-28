@@ -17,8 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Allow ArgoCD to skip dry run for plan resources if CRD is missing ([#14])
+- Fix plan creation when explicit channel is provided ([#15])
 
 [Unreleased]: https://github.com/projectsyn/component-system-upgrade-controller/compare/2606b0b...HEAD
 
 [#7]: https://github.com/projectsyn/component-system-upgrade-controller/pull/7
 [#14]: https://github.com/projectsyn/component-system-upgrade-controller/pull/14
+[#15]: https://github.com/projectsyn/component-system-upgrade-controller/pull/15
