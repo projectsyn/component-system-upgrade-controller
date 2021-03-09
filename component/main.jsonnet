@@ -168,7 +168,24 @@ local plan = [
       params.floodgate_url + 'window/' + p.day + '/' + p.hour
   );
 
-  suc.Plan(p.name, channel, p.label_selectors, p.concurrency, p.tolerations, p.image, p.push_gateway, p.command)
+  local args(p) =
+    if std.objectHas(p, 'args') then (
+      if std.type(p.args) == 'array' then
+        p.args
+      else
+        error 'Field `args` of plan "%(name)s" is not an array' % p
+    ) else
+      [];
+
+  suc.Plan(p.name,
+           channel,
+           p.label_selectors,
+           p.concurrency,
+           p.tolerations,
+           p.image,
+           p.push_gateway,
+           p.command,
+           args(p))
   for p in params.plans
 ];
 
