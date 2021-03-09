@@ -73,7 +73,7 @@ default:: `https://floodgate.syn.vshn.net/`
 
 The floodgate service URL being used.
 
-https://github.com/projectsyn/floodgate[Floodgate] is a Syn project providing inidividual System Upgrade Controller channels based on time conditions.
+https://github.com/projectsyn/floodgate[Floodgate] is a Syn project providing individual System Upgrade Controller channels based on time conditions.
 
 == `disable_grafana_dashboard`
 
@@ -83,7 +83,7 @@ default:: `false`
 
 If `true` it disables the Grafana dashboard.
 
-Used if the syn-sights Grafana components are not fully installed or the dashboard is not required at all.
+This is intended to be used when Grafana components aren't fully installed or the dashboard isn't required at all.
 
 == `job_backoff_limit`
 
@@ -131,7 +131,7 @@ If the System Upgrade Controller job does run in privileged mode.
 type:: string
 default:: `900`
 
-The time in seconds the System Upgrade Controller jobs are kept after they are completed.
+The time in seconds the System Upgrade Controller jobs are kept after they're completed.
 
 == `plans`
 
@@ -147,22 +147,30 @@ Defines the parameters for an System Upgrade Controller plan.
 
 `image`: Syn includes the https://github.com/projectsyn/system-upgrade-controller-package-upgrade[System Upgrade Controller OS Package Upgrade Script] which is available as container image on docker hub for https://hub.docker.com/r/projectsyn/suc-ubuntu-bionic[Ubuntu 18.04 (bionic)] and https://hub.docker.com/r/projectsyn/suc-ubuntu-focal/[Ubuntu 20.04 (focal)].
 
-`command`: In the case of the System Upgrade Controller OS Package Upgrade Script this is `/scripts/run.sh`.
+`command`: This parameter specifies the command for the job pods.
+In the case of the System Upgrade Controller OS Package Upgrade Script this is `/scripts/run.sh`.
 
-`push_gateway`: The syn-sights push gateway service as DNS name platform-prometheus-pushgateway.syn-synsights.svc:9091 or the direct service IP in example 10.43.209.108:9091.
+`push_gateway`: A Prometheus push gateway address as DNS name or IP.
+The value of this parameter is appended to any arbitrary arguments given in `args`.
+Currently, this behavior can't be changed.
 
 `channel`: A System Upgrade Controller compliant channel.
+This parameter is optional.
+If provided, this plan parameter overrides the Floodgate channel constructed from plan parameters `hour` and `day` in combination with component parameter `floodgate_url`.
 
 `hour`: A Floodgate point in time 0..24 (hour).
-This overwrites the `channel` parameter.
+This parameter can be omitted if plan parameter `channel` is provided.
 
 `day`: A Floodgate point in time 0=Sunday, 6=Saturday.
-This overwrites the `channel` parameter.
+This parameter can be omitted if plan parameter `channel` is provided.
 
 `label_selectors`: A node label to specify a node is patched using a specified channel.
 
 `tolerations`: Tolerations for the job pods.
 In example to run the jobs also on control plane nodes a taint is configured for etcd or control plane components.
+
+`args`: Arbitrary arguments for the job command.
+This field is optional, but must be of type `array` when specified.
 
 Example:
 ```
@@ -173,6 +181,8 @@ parameters:
         concurrency: 1
         image: docker.io/projectsyn/suc-ubuntu-focal
         command: /scripts/run.sh
+        args:
+          - some_argument
         push_gateway: 10.43.209.108:9091
         channel: http://192.168.5.42:8091/
         hour: 22 # is not applied if channel is set
