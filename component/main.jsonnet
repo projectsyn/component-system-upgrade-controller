@@ -25,7 +25,7 @@ local clusterrolebinding = kube.ClusterRoleBinding('system-upgrade') {
     kind: 'ClusterRole',
     name: 'cluster-admin',
   },
-  subjects_: [serviceaccount],
+  subjects_: [ serviceaccount ],
 };
 
 local configmap = kube.ConfigMap('default-controller-env') {
@@ -47,21 +47,21 @@ local configmap = kube.ConfigMap('default-controller-env') {
 
 local extraVols =
   if inv.parameters.facts.distribution == 'eks' then
-    [{
+    [ {
       hostPath: {
         path: '/etc/pki',
         type: 'Directory',
       },
       name: 'etc-pki',
-    }]
+    } ]
   else
     [];
 local extraVolMounts =
   if inv.parameters.facts.distribution == 'eks' then
-    [{
+    [ {
       mountPath: '/etc/pki',
       name: 'etc-pki',
-    }]
+    } ]
   else
     [];
 
