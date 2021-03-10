@@ -25,7 +25,7 @@ local clusterrolebinding = kube.ClusterRoleBinding('system-upgrade') {
     kind: 'ClusterRole',
     name: 'cluster-admin',
   },
-  subjects_: [serviceaccount],
+  subjects_: [ serviceaccount ],
 };
 
 local configmap = kube.ConfigMap('default-controller-env') {
@@ -47,21 +47,21 @@ local configmap = kube.ConfigMap('default-controller-env') {
 
 local extraVols =
   if inv.parameters.facts.distribution == 'eks' then
-    [{
+    [ {
       hostPath: {
         path: '/etc/pki',
         type: 'Directory',
       },
       name: 'etc-pki',
-    }]
+    } ]
   else
     [];
 local extraVolMounts =
   if inv.parameters.facts.distribution == 'eks' then
-    [{
+    [ {
       mountPath: '/etc/pki',
       name: 'etc-pki',
-    }]
+    } ]
   else
     [];
 
@@ -168,7 +168,24 @@ local plan = [
       params.floodgate_url + 'window/' + p.day + '/' + p.hour
   );
 
-  suc.Plan(p.name, channel, p.label_selectors, p.concurrency, p.tolerations, p.image, p.push_gateway, p.command)
+  local args(p) =
+    if std.objectHas(p, 'args') then (
+      if std.type(p.args) == 'array' then
+        p.args
+      else
+        error 'Field `args` of plan "%(name)s" is not an array' % p
+    ) else
+      [];
+
+  suc.Plan(p.name,
+           channel,
+           p.label_selectors,
+           p.concurrency,
+           p.tolerations,
+           p.image,
+           p.push_gateway,
+           p.command,
+           args(p))
   for p in params.plans
 ];
 

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change parameters.cluster.dist to parameters.facts.distribution ([#7])
 - Add ArgoCD wave number to plan CRD object
 - Update the SUC image from v0.5 to docker.io/rancher/system-upgrade-controller:v0.6.2
+- Support for arbitrary argument pass-through for plans ([#16])
 
 ### Fixed
 - Allow ArgoCD to skip dry run for plan resources if CRD is missing ([#14])
@@ -24,3 +25,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#7]: https://github.com/projectsyn/component-system-upgrade-controller/pull/7
 [#14]: https://github.com/projectsyn/component-system-upgrade-controller/pull/14
 [#15]: https://github.com/projectsyn/component-system-upgrade-controller/pull/15
+[#16]: https://github.com/projectsyn/component-system-upgrade-controller/pull/16
