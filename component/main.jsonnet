@@ -171,11 +171,18 @@ local plan = [
   local args(p) =
     if std.objectHas(p, 'args') then (
       if std.type(p.args) == 'array' then
-        p.args
+        if std.objectHas(p, 'push_gateway') then
+          std.prune(p.args + [ p.push_gateway ])
+        else
+          p.args
       else
         error 'Field `args` of plan "%(name)s" is not an array' % p
-    ) else
-      [];
+    ) else (
+      if std.objectHas(p, 'push_gateway') then
+        [ p.push_gateway ]
+      else
+        null
+    );
 
   local command(p) =
     if std.objectHas(p, 'command') then (
@@ -189,11 +196,9 @@ local plan = [
           error 'Field `command` of plan "%(name)s" is not an array nor a string' % p
       )
     ) else
-      [];
+      null;
 
   local version = if std.objectHas(p, 'version') then p.version;
-
-  local push_gateway = if std.objectHas(p, 'push_gateway') then p.push_gateway;
 
   suc.Plan(p.name,
            channel,
@@ -202,7 +207,6 @@ local plan = [
            p.concurrency,
            p.tolerations,
            p.image,
-           push_gateway,
            command(p),
            args(p))
   for p in params.plans
