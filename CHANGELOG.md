@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add ArgoCD wave number to plan CRD object
 - Update the SUC image from v0.5 to docker.io/rancher/system-upgrade-controller:v0.6.2
 - Support for arbitrary argument pass-through for plans ([#16])
+- Support for version variable in a plan
+- Support for the command variable to be a string or array
+- Allow to not set push_gateway variable
 
 ### Fixed
 - Allow ArgoCD to skip dry run for plan resources if CRD is missing ([#14])
