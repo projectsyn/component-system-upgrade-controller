@@ -3,7 +3,8 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.system_upgrade_controller;
 {
-  Plan(name, channel, label_selectors, concurrency, tolerations, image, push_gateway, command, args):
+  Plan(name, channel, version, label_selectors, concurrency, tolerations, image, command, args):
+
     kube._Object('upgrade.cattle.io/v1', 'Plan', name) {
       metadata+: {
         namespace: params.namespace,
@@ -24,11 +25,12 @@ local params = inv.parameters.system_upgrade_controller;
         drain: {
           force: true,
         },
-        channel: channel,
+        [if channel != null then 'channel']: channel,
+        [if version != null then 'version']: version,
         upgrade: {
           image: image,
-          command: [ command ],
-          args: std.prune(args + [ push_gateway ]),
+          [if command != null then 'command']: command,
+          [if args != null then 'args']: args,
         },
       },
     },

@@ -158,6 +158,9 @@ Currently, this behavior can't be changed.
 This parameter is optional.
 If provided, this plan parameter overrides the Floodgate channel constructed from plan parameters `hour` and `day` in combination with component parameter `floodgate_url`.
 
+`version`: The Image Version.
+Providing a value for `version` will prevent polling/resolution of the `channel` if specified.
+
 `hour`: A Floodgate point in time 0..24 (hour).
 This parameter can be omitted if plan parameter `channel` is provided.
 
