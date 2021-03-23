@@ -176,15 +176,45 @@ local plan = [
         error 'Field `args` of plan "%(name)s" is not an array' % p
     ) else
       [];
+    
+  local command(p) = 
+    if std.objectHas(p, 'command') then (
+      if std.type(p.command) == 'string' then (
+        [ p.command ] 
+      )
+      else (
+        if std.type(p.command) == 'array' then (
+          p.command
+        ) else
+          error 'Field `command` of plan "%(name)s" is not an array nor a string' % p
+      ) 
+    ) else
+      [];
+    
+
+  local version = (
+    if std.objectHas(p, 'version') then
+      p.version
+    else
+      ''
+  );
+
+  local push_gateway = (
+    if std.objectHas(p, 'push_gateway') then
+      p.push_gateway
+    else
+      ''
+  );
 
   suc.Plan(p.name,
            channel,
+           version,
            p.label_selectors,
            p.concurrency,
            p.tolerations,
            p.image,
-           p.push_gateway,
-           p.command,
+           push_gateway,
+           command(p),
            args(p))
   for p in params.plans
 ];
