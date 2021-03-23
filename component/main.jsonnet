@@ -198,12 +198,7 @@ local plan = [
       ''
   );
 
-  local push_gateway = (
-    if std.objectHas(p, 'push_gateway') then
-      p.push_gateway
-    else
-      ''
-  );
+  local push_gateway = if std.objectHas(p, 'push_gateway') then p.push_gateway;
 
   suc.Plan(p.name,
            channel,
