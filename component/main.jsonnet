@@ -191,12 +191,7 @@ local plan = [
     ) else
       [];
 
-  local version = (
-    if std.objectHas(p, 'version') then
-      p.version
-    else
-      ''
-  );
+  local version = if std.objectHas(p, 'version') then p.version;
 
   local push_gateway = if std.objectHas(p, 'push_gateway') then p.push_gateway;
 
