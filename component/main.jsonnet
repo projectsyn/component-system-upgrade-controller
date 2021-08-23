@@ -200,15 +200,7 @@ local plan = [
 
   local version = if std.objectHas(p, 'version') then p.version;
 
-  suc.Plan(p.name,
-           channel,
-           version,
-           p.label_selectors,
-           p.concurrency,
-           p.tolerations,
-           p.image,
-           command(p),
-           args(p))
+  suc.Plan(p.name, channel, version, p.label_selectors, p.concurrency, p.tolerations, p.image, command(p), args(p))
   for p in params.plans
 ];
 
