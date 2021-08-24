@@ -1,5 +1,6 @@
 // main template for system-upgrade-controller
 local dashboard = import 'grafana_dashboard.jsonnet';
+local com = import 'lib/commodore.libjsonnet';
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
 local suc = import 'lib/suc.libjsonnet';
@@ -89,25 +90,19 @@ local deployment = kube.Deployment('system-upgrade-controller') {
       spec+: {
         affinity: params.affinity,
         containers: [
-          {
-            env: [
-              {
-                name: 'SYSTEM_UPGRADE_CONTROLLER_NAME',
-                valueFrom: {
-                  fieldRef: {
-                    fieldPath: "metadata.labels['upgrade.cattle.io/controller']",
-                  },
+          kube.Container('system-upgrade-controller') {
+            env_: com.proxyVars {
+              SYSTEM_UPGRADE_CONTROLLER_NAME: {
+                fieldRef: {
+                  fieldPath: "metadata.labels['upgrade.cattle.io/controller']",
                 },
               },
-              {
-                name: 'SYSTEM_UPGRADE_CONTROLLER_NAMESPACE',
-                valueFrom: {
-                  fieldRef: {
-                    fieldPath: 'metadata.namespace',
-                  },
+              SYSTEM_UPGRADE_CONTROLLER_NAMESPACE: {
+                fieldRef: {
+                  fieldPath: 'metadata.namespace',
                 },
               },
-            ],
+            },
             envFrom: [
               {
                 configMapRef: {
@@ -117,7 +112,6 @@ local deployment = kube.Deployment('system-upgrade-controller') {
             ],
             image: params.suc_image,
             imagePullPolicy: 'IfNotPresent',
-            name: 'system-upgrade-controller',
             resources+: {
               requests: {
                 memory: '64Mi',
