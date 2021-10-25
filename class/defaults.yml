@@ -1,5 +1,6 @@
 parameters:
   system_upgrade_controller:
+    plans_only: false
     controller_threads: "2"
     affinity: {}
     debug_logging: 'false'

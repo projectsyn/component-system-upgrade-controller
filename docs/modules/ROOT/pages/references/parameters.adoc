@@ -10,6 +10,16 @@ default:: `syn-system-upgrade-controller`
 
 The namespace in which to deploy this component.
 
+== `plans_only`
+
+[horizontal]
+type:: boolean
+default:: `false`
+
+Whether to install the manifests for System Upgrade Controller.
+If set to `true` only plan manifests will be applied.
+Plans must be installed in the same `namespace` as the controller.
+
 == `controller_threads`
 
 [horizontal]
