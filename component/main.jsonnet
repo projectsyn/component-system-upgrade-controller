@@ -11,7 +11,7 @@ local params = inv.parameters.system_upgrade_controller;
 
 local namespace = kube.Namespace(params.namespace);
 
-local serviceaccount = kube.ServiceAccount('system-upgrade') {
+local serviceaccount = kube.ServiceAccount(params.service_account) {
   metadata+: {
     namespace: params.namespace,
   },
@@ -134,7 +134,7 @@ local deployment = kube.Deployment('system-upgrade-controller') {
             ] + extraVolMounts,
           },
         ],
-        serviceAccountName: 'system-upgrade',
+        serviceAccountName: params.service_account,
         volumes: [
           {
             hostPath: {

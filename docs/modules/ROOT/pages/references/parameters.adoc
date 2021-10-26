@@ -10,6 +10,14 @@ default:: `syn-system-upgrade-controller`
 
 The namespace in which to deploy this component.
 
+== `service_account`
+
+[horizontal]
+type:: string
+default:: `system-upgrade`
+
+The name of the service account for System Upgrade Controller.
+
 == `plans_only`
 
 [horizontal]

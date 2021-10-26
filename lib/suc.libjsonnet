@@ -20,7 +20,7 @@ local params = inv.parameters.system_upgrade_controller;
         nodeSelector: {
           matchExpressions: label_selectors,
         },
-        serviceAccountName: 'system-upgrade',
+        serviceAccountName: params.service_account,
         tolerations: tolerations,
         drain: {
           force: true,
