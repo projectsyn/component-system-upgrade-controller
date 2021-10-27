@@ -9,6 +9,7 @@ type:: string
 default:: `syn-system-upgrade-controller`
 
 The namespace in which to deploy this component.
+When parameter <<_plans_only,`plans_only`>> is set to true, the component expects that the provided namespace exists and a SUC instance is deployed in the given namespace.
 
 == `service_account`
 
@@ -17,6 +18,7 @@ type:: string
 default:: `system-upgrade`
 
 The name of the service account for System Upgrade Controller.
+When option <<_plans_only,`plans_only`>> is set to `true`, the component expects that a service account with the given name exists in the target namespace.
 
 == `plans_only`
 
