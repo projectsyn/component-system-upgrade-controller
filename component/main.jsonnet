@@ -11,7 +11,7 @@ local params = inv.parameters.system_upgrade_controller;
 
 local namespace = kube.Namespace(params.namespace);
 
-local serviceaccount = kube.ServiceAccount('system-upgrade') {
+local serviceaccount = kube.ServiceAccount(params.service_account) {
   metadata+: {
     namespace: params.namespace,
   },
@@ -134,7 +134,7 @@ local deployment = kube.Deployment('system-upgrade-controller') {
             ] + extraVolMounts,
           },
         ],
-        serviceAccountName: 'system-upgrade',
+        serviceAccountName: params.service_account,
         volumes: [
           {
             hostPath: {
@@ -198,13 +198,20 @@ local plan = [
   for p in params.plans
 ];
 
-// Define outputs below
-{
+local controller_definition = {
   '00_namespace': namespace,
   '01_serviceaccount': serviceaccount,
   '02_clusterrolebinding': clusterrolebinding,
   '03_configmap': configmap,
   '04_deployment': deployment,
-  '05_plans': plan,
   [if !params.disable_grafana_dashboard then '06_dashboard']: dashboard.dashboard,
-}
+};
+
+local plans_definition = {
+  '05_plans': plan,
+};
+
+if params.plans_only then
+  plans_definition
+else
+  controller_definition + plans_definition

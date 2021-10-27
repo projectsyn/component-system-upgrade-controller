@@ -1,1 +1,33 @@
+parameters:
+  synsights:
+    namespace: syn-synsights
 
+  system_upgrade_controller:
+    plan_day: 2
+    plan_hour: 7
+    plan_tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+
+    plans:
+      - name: system-upgrade-focal
+        concurrency: 1
+        image: docker.io/projectsyn/suc-ubuntu-focal
+        command: /scripts/run.sh
+        push_gateway: platform-prometheus-pushgateway.${synsights:namespace}.svc.cluster.local:9091
+        day: ${system_upgrade_controller:plan_day}
+        hour: ${system_upgrade_controller:plan_hour}
+        label_selectors:
+          - {key: plan.upgrade.cattle.io/focal, operator: Exists}
+        tolerations: ${system_upgrade_controller:plan_tolerations}
+
+      - name: system-upgrade-bionic
+        concurrency: 1
+        image: docker.io/projectsyn/suc-ubuntu-bionic
+        command: /scripts/run.sh
+        push_gateway: platform-prometheus-pushgateway.${synsights:namespace}.svc.cluster.local:9091
+        day: ${system_upgrade_controller:plan_day}
+        hour: ${system_upgrade_controller:plan_hour}
+        label_selectors:
+          - {key: plan.upgrade.cattle.io/bionic, operator: Exists}
+        tolerations: ${system_upgrade_controller:plan_tolerations}
