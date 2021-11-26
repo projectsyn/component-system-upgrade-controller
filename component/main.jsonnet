@@ -177,7 +177,7 @@ local convertLegacyPlan(p) = std.trace(
     },
     tolerations: {
       [t.key]: t
-      for t in p.tolerations
+      for t in com.getValueOrDefault(p, 'tolerations', [])
     },
     floodgate: {
       day: p.day,
@@ -209,7 +209,9 @@ local plans = [
     else
       error 'Field `spec.upgrade.command` of plan "%s" is not an array nor a string' % pname;
 
-  suc.Plan(pname, p.label_selectors, p.tolerations) {
+  local tolerations = com.getValueOrDefault(p, 'tolerations', {});
+
+  suc.Plan(pname, p.label_selectors, tolerations) {
     spec+: com.makeMergeable(p.spec) + {
       channel:
         if 'channel' in super then
