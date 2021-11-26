@@ -14,6 +14,5 @@ parameters:
     service_account: system-upgrade
     plan_polling_interval: "15m"
     suc_image: docker.io/rancher/system-upgrade-controller:v0.6.2
-    floodgate_url: https://floodgate.syn.vshn.net/
+    floodgate_url: https://floodgate.syn.vshn.net
     disable_grafana_dashboard: false
-    plans: []
