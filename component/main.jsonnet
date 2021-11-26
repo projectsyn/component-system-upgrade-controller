@@ -209,27 +209,7 @@ local plans = [
     else
       error 'Field `spec.upgrade.command` of plan "%s" is not an array nor a string' % pname;
 
-  local tolerations = [
-    p.tolerations[t] { key: t }
-    for t in std.objectFields(p.tolerations)
-    if p.tolerations[t] != null
-  ];
-
-  local label_selectors = [
-    p.label_selectors[l] { key: l }
-    for l in std.objectFields(p.label_selectors)
-    if p.label_selectors[l] != null
-  ];
-
-  local floodgate_channel(fgspec) =
-    local url = com.getValueOrDefault(fgspec, 'url', params.floodgate_url);
-    local basepath = com.getValueOrDefault(fgspec, 'basepath', 'window');
-    '%(url)s/%(basepath)s/%(day)s/%(hour)s' % fgspec {
-      url: url,
-      basepath: basepath,
-    };
-
-  suc.Plan(pname, label_selectors, tolerations) {
+  suc.Plan(pname, p.label_selectors, p.tolerations) {
     spec+: com.makeMergeable(p.spec) + {
       channel:
         if 'channel' in super then
@@ -238,7 +218,7 @@ local plans = [
           assert
             std.objectHas(p, 'floodgate') :
             'Plan "%s" requires either an explicit value for `spec.channel` or a Floodgate configuration' % pname;
-          floodgate_channel(p.floodgate),
+          suc.floodgate_channel(p.floodgate),
       upgrade+: {
         command: fixup_command(super.command),
         [if std.objectHas(p, 'push_gateway') then 'args']+:
