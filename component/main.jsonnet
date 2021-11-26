@@ -211,16 +211,14 @@ local plans = [
 
   local tolerations = com.getValueOrDefault(p, 'tolerations', {});
 
-  suc.Plan(pname, p.label_selectors, tolerations) {
-    spec+: com.makeMergeable(p.spec) + {
-      channel:
-        if 'channel' in super then
-          super.channel
-        else
-          assert
-            std.objectHas(p, 'floodgate') :
-            'Plan "%s" requires either an explicit value for `spec.channel` or a Floodgate configuration' % pname;
-          suc.floodgate_channel(p.floodgate),
+  local sp = suc.Plan(pname, p.label_selectors, tolerations) {
+    spec+: com.makeMergeable(p.spec),
+  };
+  local needsFG = !std.objectHas(sp.spec, 'channel') && !std.objectHas(sp.spec, 'version');
+
+  sp {
+    spec+: {
+      [if needsFG then 'channel']: suc.floodgate_channel(p.floodgate),
       upgrade+: {
         command: fixup_command(super.command),
         [if std.objectHas(p, 'push_gateway') then 'args']+:
@@ -228,6 +226,7 @@ local plans = [
       },
     },
   }
+
   for pname in std.objectFields(planConfigs)
   if planConfigs[pname] != null
 ];

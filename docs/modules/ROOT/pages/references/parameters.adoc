@@ -205,9 +205,9 @@ See the https://github.com/rancher/system-upgrade-controller#example-plans[Syste
 type:: dict
 supported keys:: `url`, `basepath`, `day`, `hour`
 
-This parameter is required unless field `channel` is present in plan parameter `spec`.
+This parameter is required unless either field `channel` or field `version` is present in plan parameter `spec`.
 This parameter can be used to instruct the component to construct a Floodgate-based value for the plan's channel.
-If field `channel` in key `plans.<P>.spec` is set, configuration provided in this parameter has no effect.
+If field `channel` or field `version` in key `plans.<P>.spec` is set, configuration provided in this parameter has no effect.
 
 The supported keys in this parameter have the following effects:
 
