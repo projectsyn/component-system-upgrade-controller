@@ -6,7 +6,7 @@ See the xref:references/parameters.adoc[parameters] reference for further detail
 
 == Example for Ubuntu 20.04 (Focal)
 
-A minimal example to maintain all nodes of a cluster running Kubernetes 1.18 and Ubuntu 20.04 starting Tuesday at 22:00 having a node label `plan.upgrade.cattle.io/focal`:
+A minimal example to maintain all nodes with label `plan.upgrade.cattle.io/focal` of a cluster running Kubernetes 1.18 and Ubuntu 20.04 starting Tuesday at 22:00:
 
 ```
 parameters:
@@ -14,19 +14,23 @@ parameters:
     job_kubectl_image: rancher/kubectl:v1.18.0
     disable_grafana_dashboard: true
     plans:
-      - name: system-upgrade
-        concurrency: 1
-        image: docker.io/projectsyn/suc-ubuntu-focal
-        command: /scripts/run.sh
-        # push_gateway: platform-prometheus-pushgateway.syn-synsights.svc:9091
-        push_gateway: 10.43.129.22:9091
-        day: 2  # Tuesday
-        hour: 22
+      focal:
+        spec:
+          concurrency: 1
+          upgrade:
+            image: docker.io/projectsyn/suc-ubuntu-focal
+            command: /scripts/run.sh
+          # push_gateway: platform-prometheus-pushgateway.syn-synsights.svc:9091
+          push_gateway: 10.43.129.22:9091
+        floodgate:
+          day: 2  # Tuesday
+          hour: 22
         label_selectors:
-          - {key: plan.upgrade.cattle.io/focal, operator: Exists}
-        tolerations:
-          - key: node-role.kubernetes.io/controlplane
+          plan.upgrade.cattle.io/focal:
             operator: Exists
-          - key: node-role.kubernetes.io/etcd
+        tolerations:
+          node-role.kubernetes.io/controlplane:
+            operator: Exists
+          node-role.kubernetes.io/etcd:
             operator: Exists
 ```
