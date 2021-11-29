@@ -227,7 +227,7 @@ local plans = [
     },
   }
 
-  for pname in std.objectFields(planConfigs)
+  for pname in std.sort(std.objectFields(planConfigs))
   if planConfigs[pname] != null
 ];
 
