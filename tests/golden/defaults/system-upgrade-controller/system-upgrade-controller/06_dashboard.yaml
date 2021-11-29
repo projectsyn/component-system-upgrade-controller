@@ -1,0 +1,176 @@
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  labels:
+    app: platform-grafana
+  name: system-upgrade-controller
+  namespace: syn-synsights
+spec:
+  json: "{\n  \"annotations\": {\n    \"list\": [\n      {\n        \"builtIn\": 1,\n\
+    \        \"datasource\": \"-- Grafana --\",\n        \"enable\": true,\n     \
+    \   \"hide\": true,\n        \"iconColor\": \"rgba(0, 211, 255, 1)\",\n      \
+    \  \"name\": \"Annotations & Alerts\",\n        \"type\": \"dashboard\"\n    \
+    \  }\n    ]\n  },\n  \"editable\": true,\n  \"gnetId\": null,\n  \"graphTooltip\"\
+    : 0,\n  \"id\": 3,\n  \"links\": [\n\n  ],\n  \"panels\": [\n    {\n      \"aliasColors\"\
+    : {\n        \"Jobs failed\": \"dark-red\",\n        \"Nodes completed\": \"dark-green\"\
+    ,\n        \"Running Jobs\": \"dark-purple\"\n      },\n      \"bars\": false,\n\
+    \      \"dashLength\": 10,\n      \"dashes\": false,\n      \"datasource\": \"\
+    RANCHER_MONITORING\",\n      \"fill\": 1,\n      \"fillGradient\": 0,\n      \"\
+    gridPos\": {\n        \"h\": 9,\n        \"w\": 12,\n        \"x\": 0,\n     \
+    \   \"y\": 0\n      },\n      \"hiddenSeries\": false,\n      \"id\": 2,\n   \
+    \   \"legend\": {\n        \"avg\": false,\n        \"current\": false,\n    \
+    \    \"max\": false,\n        \"min\": false,\n        \"show\": true,\n     \
+    \   \"total\": false,\n        \"values\": false\n      },\n      \"lines\": true,\n\
+    \      \"linewidth\": 1,\n      \"nullPointMode\": \"null as zero\",\n      \"\
+    options\": {\n        \"dataLinks\": [\n\n        ]\n      },\n      \"percentage\"\
+    : false,\n      \"pointradius\": 2,\n      \"points\": false,\n      \"renderer\"\
+    : \"flot\",\n      \"seriesOverrides\": [\n\n      ],\n      \"spaceLength\":\
+    \ 10,\n      \"stack\": false,\n      \"steppedLine\": false,\n      \"targets\"\
+    : [\n        {\n          \"expr\": \"count(kube_job_status_succeeded{namespace=\\\
+    \"syn-system-upgrade-controller\\\"} == 1) by (node)\",\n          \"instant\"\
+    : false,\n          \"interval\": \"\",\n          \"legendFormat\": \"Nodes completed\"\
+    ,\n          \"refId\": \"A\"\n        },\n        {\n          \"expr\": \"sum(kube_node_info)\"\
+    ,\n          \"instant\": false,\n          \"interval\": \"\",\n          \"\
+    legendFormat\": \"Nodes\",\n          \"refId\": \"B\"\n        },\n        {\n\
+    \          \"expr\": \"count(kube_job_status_failed{namespace=\\\"syn-system-upgrade-controller\\\
+    \"} > 1) by (node)\",\n          \"interval\": \"\",\n          \"legendFormat\"\
+    : \"Jobs failed\",\n          \"refId\": \"C\"\n        },\n        {\n      \
+    \    \"expr\": \"sum(kube_job_status_active{namespace=\\\"syn-system-upgrade-controller\\\
+    \"} == 1) by (node)\",\n          \"interval\": \"\",\n          \"legendFormat\"\
+    : \"Running Jobs\",\n          \"refId\": \"D\"\n        }\n      ],\n      \"\
+    thresholds\": [\n\n      ],\n      \"timeFrom\": null,\n      \"timeRegions\"\
+    : [\n\n      ],\n      \"timeShift\": null,\n      \"title\": \"Upgrade Jobs completed\"\
+    ,\n      \"tooltip\": {\n        \"shared\": true,\n        \"sort\": 0,\n   \
+    \     \"value_type\": \"individual\"\n      },\n      \"type\": \"graph\",\n \
+    \     \"xaxis\": {\n        \"buckets\": null,\n        \"mode\": \"time\",\n\
+    \        \"name\": null,\n        \"show\": true,\n        \"values\": [\n\n \
+    \       ]\n      },\n      \"yaxes\": [\n        {\n          \"format\": \"short\"\
+    ,\n          \"label\": null,\n          \"logBase\": 1,\n          \"max\": null,\n\
+    \          \"min\": \"0\",\n          \"show\": true\n        },\n        {\n\
+    \          \"format\": \"short\",\n          \"label\": null,\n          \"logBase\"\
+    : 1,\n          \"max\": null,\n          \"min\": null,\n          \"show\":\
+    \ true\n        }\n      ],\n      \"yaxis\": {\n        \"align\": false,\n \
+    \       \"alignLevel\": null\n      }\n    },\n    {\n      \"aliasColors\": {\n\
+    \        \"Cordoned nodes\": \"dark-red\",\n        \"Total nodes\": \"green\"\
+    \n      },\n      \"bars\": false,\n      \"dashLength\": 10,\n      \"dashes\"\
+    : false,\n      \"datasource\": \"RANCHER_MONITORING\",\n      \"fill\": 1,\n\
+    \      \"fillGradient\": 0,\n      \"gridPos\": {\n        \"h\": 9,\n       \
+    \ \"w\": 12,\n        \"x\": 12,\n        \"y\": 0\n      },\n      \"hiddenSeries\"\
+    : false,\n      \"id\": 4,\n      \"legend\": {\n        \"avg\": false,\n   \
+    \     \"current\": false,\n        \"max\": false,\n        \"min\": false,\n\
+    \        \"show\": true,\n        \"total\": false,\n        \"values\": false\n\
+    \      },\n      \"lines\": true,\n      \"linewidth\": 1,\n      \"nullPointMode\"\
+    : \"null\",\n      \"options\": {\n        \"dataLinks\": [\n\n        ]\n   \
+    \   },\n      \"percentage\": false,\n      \"pointradius\": 2,\n      \"points\"\
+    : false,\n      \"renderer\": \"flot\",\n      \"seriesOverrides\": [\n\n    \
+    \  ],\n      \"spaceLength\": 10,\n      \"stack\": false,\n      \"steppedLine\"\
+    : false,\n      \"targets\": [\n        {\n          \"expr\": \"sum(kube_node_spec_unschedulable)\"\
+    ,\n          \"interval\": \"\",\n          \"legendFormat\": \"Cordoned nodes\"\
+    ,\n          \"refId\": \"A\"\n        },\n        {\n          \"expr\": \"count(kube_node_info)\"\
+    ,\n          \"interval\": \"\",\n          \"legendFormat\": \"Total nodes\"\
+    ,\n          \"refId\": \"B\"\n        }\n      ],\n      \"thresholds\": [\n\n\
+    \      ],\n      \"timeFrom\": null,\n      \"timeRegions\": [\n\n      ],\n \
+    \     \"timeShift\": null,\n      \"title\": \"Cordoned Nodes\",\n      \"tooltip\"\
+    : {\n        \"shared\": true,\n        \"sort\": 0,\n        \"value_type\":\
+    \ \"individual\"\n      },\n      \"type\": \"graph\",\n      \"xaxis\": {\n \
+    \       \"buckets\": null,\n        \"mode\": \"time\",\n        \"name\": null,\n\
+    \        \"show\": true,\n        \"values\": [\n\n        ]\n      },\n     \
+    \ \"yaxes\": [\n        {\n          \"format\": \"short\",\n          \"label\"\
+    : null,\n          \"logBase\": 1,\n          \"max\": null,\n          \"min\"\
+    : null,\n          \"show\": true\n        },\n        {\n          \"format\"\
+    : \"short\",\n          \"label\": null,\n          \"logBase\": 1,\n        \
+    \  \"max\": null,\n          \"min\": null,\n          \"show\": true\n      \
+    \  }\n      ],\n      \"yaxis\": {\n        \"align\": false,\n        \"alignLevel\"\
+    : null\n      }\n    },\n    {\n      \"columns\": [\n\n      ],\n      \"datasource\"\
+    : \"RANCHER_MONITORING\",\n      \"fontSize\": \"100%\",\n      \"gridPos\": {\n\
+    \        \"h\": 8,\n        \"w\": 12,\n        \"x\": 0,\n        \"y\": 9\n\
+    \      },\n      \"hideTimeOverride\": false,\n      \"id\": 6,\n      \"interval\"\
+    : \"\",\n      \"options\": {\n\n      },\n      \"pageSize\": null,\n      \"\
+    repeat\": null,\n      \"showHeader\": true,\n      \"sort\": {\n        \"col\"\
+    : 15,\n        \"desc\": true\n      },\n      \"styles\": [\n        {\n    \
+    \      \"alias\": \"Node Hashes\",\n          \"align\": \"left\",\n         \
+    \ \"colorMode\": null,\n          \"colors\": [\n            \"rgba(245, 54, 54,\
+    \ 0.9)\",\n            \"rgba(237, 129, 40, 0.89)\",\n            \"rgba(50, 172,\
+    \ 45, 0.97)\"\n          ],\n          \"decimals\": 2,\n          \"link\": false,\n\
+    \          \"mappingType\": 1,\n          \"pattern\": \"Metric\",\n         \
+    \ \"preserveFormat\": false,\n          \"rangeMaps\": [\n\n          ],\n   \
+    \       \"sanitize\": false,\n          \"thresholds\": [\n\n          ],\n  \
+    \        \"type\": \"string\",\n          \"unit\": \"short\",\n          \"valueMaps\"\
+    : [\n\n          ]\n        },\n        {\n          \"alias\": \"\",\n      \
+    \    \"align\": \"auto\",\n          \"colorMode\": null,\n          \"colors\"\
+    : [\n            \"rgba(245, 54, 54, 0.9)\",\n            \"rgba(237, 129, 40,\
+    \ 0.89)\",\n            \"rgba(50, 172, 45, 0.97)\"\n          ],\n          \"\
+    dateFormat\": \"YYYY-MM-DD HH:mm:ss\",\n          \"decimals\": 2,\n         \
+    \ \"mappingType\": 1,\n          \"pattern\": \"Time\",\n          \"thresholds\"\
+    : [\n\n          ],\n          \"type\": \"hidden\",\n          \"unit\": \"short\"\
+    \n        },\n        {\n          \"alias\": \"\",\n          \"colorMode\":\
+    \ null,\n          \"colors\": [\n            \"rgba(245, 54, 54, 0.9)\",\n  \
+    \          \"rgba(237, 129, 40, 0.89)\",\n            \"rgba(50, 172, 45, 0.97)\"\
+    \n          ],\n          \"dateFormat\": \"YYYY-MM-DD HH:mm:ss\",\n         \
+    \ \"decimals\": 2,\n          \"mappingType\": 1,\n          \"pattern\": \"/label_k3s:*|Value|kubernetes_.*|__name__|instance|app_kubernetes_io_.*|job|helm.*/\"\
+    ,\n          \"thresholds\": [\n\n          ],\n          \"type\": \"hidden\"\
+    ,\n          \"unit\": \"short\"\n        },\n        {\n          \"alias\":\
+    \ \"Node\",\n          \"colorMode\": null,\n          \"colors\": [\n       \
+    \     \"rgba(245, 54, 54, 0.9)\",\n            \"rgba(237, 129, 40, 0.89)\",\n\
+    \            \"rgba(50, 172, 45, 0.97)\"\n          ],\n          \"dateFormat\"\
+    : \"YYYY-MM-DD HH:mm:ss\",\n          \"decimals\": 2,\n          \"mappingType\"\
+    : 1,\n          \"pattern\": \"node\",\n          \"thresholds\": [\n\n      \
+    \    ],\n          \"type\": \"number\",\n          \"unit\": \"short\"\n    \
+    \    },\n        {\n          \"alias\": \"Upgrade Hash\",\n          \"colorMode\"\
+    : null,\n          \"colors\": [\n            \"rgba(245, 54, 54, 0.9)\",\n  \
+    \          \"rgba(237, 129, 40, 0.89)\",\n            \"rgba(50, 172, 45, 0.97)\"\
+    \n          ],\n          \"dateFormat\": \"YYYY-MM-DD HH:mm:ss\",\n         \
+    \ \"decimals\": 2,\n          \"mappingType\": 1,\n          \"pattern\": \"/label_plan_upgrade_cattle_io_.*/\"\
+    ,\n          \"thresholds\": [\n\n          ],\n          \"type\": \"string\"\
+    ,\n          \"unit\": \"short\"\n        },\n        {\n          \"alias\":\
+    \ \"\",\n          \"colorMode\": null,\n          \"colors\": [\n           \
+    \ \"rgba(245, 54, 54, 0.9)\",\n            \"rgba(237, 129, 40, 0.89)\",\n   \
+    \         \"rgba(50, 172, 45, 0.97)\"\n          ],\n          \"dateFormat\"\
+    : \"YYYY-MM-DD HH:mm:ss\",\n          \"decimals\": 2,\n          \"mappingType\"\
+    : 1,\n          \"pattern\": \"/.*/\",\n          \"thresholds\": [\n\n      \
+    \    ],\n          \"type\": \"string\",\n          \"unit\": \"short\"\n    \
+    \    }\n      ],\n      \"targets\": [\n        {\n          \"expr\": \"kube_node_labels\"\
+    ,\n          \"format\": \"table\",\n          \"hide\": false,\n          \"\
+    instant\": true,\n          \"interval\": \"\",\n          \"intervalFactor\"\
+    : 1,\n          \"legendFormat\": \"\",\n          \"refId\": \"A\"\n        }\n\
+    \      ],\n      \"timeFrom\": null,\n      \"timeShift\": null,\n      \"title\"\
+    : \"Node table\",\n      \"transform\": \"table\",\n      \"type\": \"table\"\n\
+    \    },\n    {\n      \"columns\": [\n\n      ],\n      \"datasource\": \"RANCHER_MONITORING\"\
+    ,\n      \"fontSize\": \"100%\",\n      \"gridPos\": {\n        \"h\": 8,\n  \
+    \      \"w\": 12,\n        \"x\": 12,\n        \"y\": 9\n      },\n      \"id\"\
+    : 8,\n      \"options\": {\n\n      },\n      \"pageSize\": null,\n      \"showHeader\"\
+    : true,\n      \"sort\": {\n        \"col\": 0,\n        \"desc\": true\n    \
+    \  },\n      \"styles\": [\n        {\n          \"alias\": \"Time\",\n      \
+    \    \"dateFormat\": \"YYYY-MM-DD HH:mm:ss\",\n          \"pattern\": \"Time\"\
+    ,\n          \"type\": \"hidden\"\n        },\n        {\n          \"alias\"\
+    : \"\",\n          \"colorMode\": null,\n          \"colors\": [\n           \
+    \ \"rgba(245, 54, 54, 0.9)\",\n            \"rgba(237, 129, 40, 0.89)\",\n   \
+    \         \"rgba(50, 172, 45, 0.97)\"\n          ],\n          \"dateFormat\"\
+    : \"YYYY-MM-DD HH:mm:ss\",\n          \"decimals\": 2,\n          \"mappingType\"\
+    : 1,\n          \"pattern\": \"Value\",\n          \"thresholds\": [\n\n     \
+    \     ],\n          \"type\": \"hidden\",\n          \"unit\": \"short\"\n   \
+    \     },\n        {\n          \"alias\": \"\",\n          \"colorMode\": null,\n\
+    \          \"colors\": [\n            \"rgba(245, 54, 54, 0.9)\",\n          \
+    \  \"rgba(237, 129, 40, 0.89)\",\n            \"rgba(50, 172, 45, 0.97)\"\n  \
+    \        ],\n          \"dateFormat\": \"YYYY-MM-DD HH:mm:ss\",\n          \"\
+    decimals\": 2,\n          \"mappingType\": 1,\n          \"pattern\": \"/__name__|endpoint|job|namespace|pod|service/\"\
+    ,\n          \"thresholds\": [\n\n          ],\n          \"type\": \"hidden\"\
+    ,\n          \"unit\": \"short\"\n        },\n        {\n          \"alias\":\
+    \ \"\",\n          \"colorMode\": null,\n          \"colors\": [\n           \
+    \ \"rgba(245, 54, 54, 0.9)\",\n            \"rgba(237, 129, 40, 0.89)\",\n   \
+    \         \"rgba(50, 172, 45, 0.97)\"\n          ],\n          \"decimals\": 2,\n\
+    \          \"pattern\": \"/.*/\",\n          \"thresholds\": [\n\n          ],\n\
+    \          \"type\": \"number\",\n          \"unit\": \"short\"\n        }\n \
+    \     ],\n      \"targets\": [\n        {\n          \"expr\": \"suc_package_upgraded\"\
+    ,\n          \"format\": \"table\",\n          \"instant\": true,\n          \"\
+    refId\": \"A\"\n        }\n      ],\n      \"timeFrom\": null,\n      \"timeShift\"\
+    : null,\n      \"title\": \"Updated Packages\",\n      \"transform\": \"table\"\
+    ,\n      \"type\": \"table\"\n    }\n  ],\n  \"refresh\": \"5s\",\n  \"schemaVersion\"\
+    : 21,\n  \"style\": \"dark\",\n  \"tags\": [\n\n  ],\n  \"templating\": {\n  \
+    \  \"list\": [\n\n    ]\n  },\n  \"time\": {\n    \"from\": \"now-1h\",\n    \"\
+    to\": \"now\"\n  },\n  \"timepicker\": {\n    \"refresh_intervals\": [\n     \
+    \ \"5s\",\n      \"10s\",\n      \"30s\",\n      \"1m\",\n      \"5m\",\n    \
+    \  \"15m\",\n      \"30m\",\n      \"1h\",\n      \"2h\",\n      \"1d\"\n    ]\n\
+    \  },\n  \"timezone\": \"\",\n  \"title\": \"SUC overview\",\n  \"uid\": \"Ut3fVneZz\"\
+    ,\n  \"version\": 1\n}"
+  name: system-upgrade-controller.json

@@ -1,0 +1,59 @@
+apiVersion: upgrade.cattle.io/v1
+kind: Plan
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  labels:
+    app.kubernetes.io/managed-by: syn
+    name: system-upgrade-focal
+  name: system-upgrade-focal
+  namespace: syn-system-upgrade-controller
+spec:
+  channel: https://floodgate.syn.vshn.net/window/2/7
+  concurrency: 1
+  drain:
+    force: true
+  nodeSelector:
+    matchExpressions:
+      - key: plan.upgrade.cattle.io/focal
+        operator: Exists
+  serviceAccountName: system-upgrade
+  tolerations:
+    - key: node-role.kubernetes.io/master
+      operator: Exists
+  upgrade:
+    args:
+      - platform-prometheus-pushgateway.syn-synsights.svc.cluster.local:9091
+    command:
+      - /scripts/run.sh
+    image: docker.io/projectsyn/suc-ubuntu-focal
+---
+apiVersion: upgrade.cattle.io/v1
+kind: Plan
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  labels:
+    app.kubernetes.io/managed-by: syn
+    name: system-upgrade-bionic
+  name: system-upgrade-bionic
+  namespace: syn-system-upgrade-controller
+spec:
+  channel: https://floodgate.syn.vshn.net/window/2/7
+  concurrency: 1
+  drain:
+    force: true
+  nodeSelector:
+    matchExpressions:
+      - key: plan.upgrade.cattle.io/bionic
+        operator: Exists
+  serviceAccountName: system-upgrade
+  tolerations:
+    - key: node-role.kubernetes.io/master
+      operator: Exists
+  upgrade:
+    args:
+      - platform-prometheus-pushgateway.syn-synsights.svc.cluster.local:9091
+    command:
+      - /scripts/run.sh
+    image: docker.io/projectsyn/suc-ubuntu-bionic
