@@ -156,71 +156,185 @@ The time in seconds the System Upgrade Controller jobs are kept after they're co
 == `plans`
 
 [horizontal]
-type:: list
-default:: `[]`
+type:: dict
+default:: `{}`
 
-Defines the parameters for an System Upgrade Controller plan.
+This parameter allows users to configure one or more System Upgrade Controller `Plan` resources.
 
-`name`: Name of the selected channel.
+Each entry in the dict corresponds to one `Plan` resource.
+Dict keys are used as the name of the resulting `Plan` resource.
+The dict value is expected to be another dict.
+The component supports keys `spec`, `floodgate`, `label_selectors` and `tolerations` in the value dict.
 
-`concurrency`: The amount of jobs can run simultaneously.
+Plans can be removed by setting the value of the dict entry to `null`.
 
-`image`: Syn includes the https://github.com/projectsyn/system-upgrade-controller-package-upgrade[System Upgrade Controller OS Package Upgrade Script] which is available as container image on docker hub for https://hub.docker.com/r/projectsyn/suc-ubuntu-bionic[Ubuntu 18.04 (bionic)] and https://hub.docker.com/r/projectsyn/suc-ubuntu-focal/[Ubuntu 20.04 (focal)].
+=== `plans.<P>.spec`
 
-`command`: This parameter specifies the command for the job pods.
-In the case of the System Upgrade Controller OS Package Upgrade Script this is `/scripts/run.sh`.
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+nodeSelector:
+  matchExpressions:
+    <from plans.<P>.label_selectors>
+serviceAccountName: <params.service_account>
+tolerations:
+  <from plans.<P>.tolerations>
+drain:
+  force: true
+----
 
-`push_gateway`: A Prometheus push gateway address as DNS name or IP.
-The value of this parameter is appended to any arbitrary arguments given in `args`.
-Currently, this behavior can't be changed.
+This parameter is mandatory.
+A minimal configuration requires fields `upgrade.image` and `upgrade.command` to be set.
 
-`channel`: A System Upgrade Controller compliant channel.
+This parameter is merged with  the predefined configuration shown above to form the `Plan` resource's `spec` field.
+Configurations in the parameter override values in the default.
+Configurations given in other fields in the plan configuration may override values provided in this parameter.
+See the following sections for details.
+
+The component accepts both string and array values for `spec.upgrade.command`.
+If a string value is given, it's transformed into an array with a single member.
+
+See the https://github.com/rancher/system-upgrade-controller#example-plans[System Upgrade Controller documentation] for supported configurations.
+
+=== `plans.<P>.floodgate`
+
+[horizontal]
+type:: dict
+supported keys:: `url`, `basepath`, `day`, `hour`
+
+This parameter is required unless either field `channel` or field `version` is present in plan parameter `spec`.
+This parameter can be used to instruct the component to construct a Floodgate-based value for the plan's channel.
+If field `channel` or field `version` in key `plans.<P>.spec` is set, configuration provided in this parameter has no effect.
+
+The supported keys in this parameter have the following effects:
+
+`url`:: The base URL of the Floodgate instance.
+This key is optional.
+If it's not present, the value of component parameter `floodgate_url` is used in the resulting channel value.
+
+`basepath`:: The base path appended to the Floodgate URL.
+This key is optional.
+If it's not present, the component uses `window` as base path.
+
+`day`:: The day of the week on which to start the upgrade.
+This should be a number between 0 (Sunday) and 6 (Saturday).
+
+`hour`:: The hour in the day on which to start the upgrade
+This should be a number between 0 and 23.
+
+See the https://github.com/projectsyn/floodgate/blob/master/docs/modules/ROOT/pages/index.adoc[Floodgate documentation] for details on how Floodgate works.
+
+=== `plans.<P>.push_gateway`
+
+[horizontal]
+type:: string
+
+A Prometheus push gateway address as DNS name or IP.
 This parameter is optional.
-If provided, this plan parameter overrides the Floodgate channel constructed from plan parameters `hour` and `day` in combination with component parameter `floodgate_url`.
+If present, the value of this parameter is appended to any arbitrary arguments given in the plan's `spec.upgrade.args`.
+If you need more complex configuration, please provide any arguments to the upgrade command directly in `spec.upgrade.args` and omit this parameter
 
-`version`: The Image Version.
-Providing a value for `version` will prevent polling/resolution of the `channel` if specified.
+=== `plans.<P>.label_selectors`
 
-`hour`: A Floodgate point in time 0..24 (hour).
-This parameter can be omitted if plan parameter `channel` is provided.
+[horizontal]
+type:: dict
 
-`day`: A Floodgate point in time 0=Sunday, 6=Saturday.
-This parameter can be omitted if plan parameter `channel` is provided.
+Specify a label selector according to which nodes to upgrade are selected.
+This parameter is mandatory.
+The System Upgrade Controller will add and manage label `plan.upgrade.cattle.io/P` for a plan named `P` to all nodes selected by the label selectors.
+It will set the value of that label to the SHA256 hash of the Docker image used for the upgrade.
+It's considered best practice to use that label as the label selector for the plan.
 
-`label_selectors`: A node label to specify a node is patched using a specified channel.
+The component will transform the provided dict into a list of Kubernetes label selector `matchExpressions`.
+Each dict entry is transformed into a `LabelSelectorRequirement`.
+The value of each entry used as the `LabelSelectorRequirement` and the key of the entry is set as the value for field `key`.
 
-`tolerations`: Tolerations for the job pods.
-In example to run the jobs also on control plane nodes a taint is configured for etcd or control plane components.
+The resulting list of `LabelSelectorRequirements` is assigned to key `spec.nodeSelector.matchExpressions` in the  `Plan` resource.
 
-`args`: Arbitrary arguments for the job command.
-This field is optional, but must be of type `array` when specified.
+See the https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/label-selector/#LabelSelector[Kubernetes API documentation] for supported fields in `LabelSelectorRequirement`.
 
-Example:
-```
+=== `plans.<P>.tolerations`
+
+[horizontal]
+type:: dict
+
+Specify Kubernetes tolerations for the upgrade job.
+This parameter is optional.
+If omitted, no tolerations are configured on the plan.
+
+The component transforms the provided dict into a list of Kubernetes tolerations.
+Each dict entry is transformed into a `Toleration` by the component.
+The entry's value is used as a `Toleration` and the entry's key is set as value for field `key`.
+
+The component assigns the resulting list of tolerations to field `spec.tolerations` in the `Plan`.
+
+See the https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#scheduling[Kubernetes API documentation] for supported fields in `Toleration`.
+
+
+=== Example Plan
+
+In this example, we specify a taint for etcd or control plane components so that the upgrade jobs can be scheduled on nodes hosting control plane or etcd components.
+
+[source,yaml]
+----
 parameters:
   system_upgrade_controller:
     plans:
-      - name: system-upgrade-1
-        concurrency: 1
-        image: docker.io/projectsyn/suc-ubuntu-focal
-        command: /scripts/run.sh
-        args:
-          - some_argument
+      focal: <1>
+        spec: <2>
+          concurrency: 1
+          upgrade:
+            image: docker.io/projectsyn/suc-ubuntu-focal
+            command: /scripts/run.sh
+            args:
+              - some_argument
+          channel: http://192.168.5.42:8091/
         push_gateway: 10.43.209.108:9091
-        channel: http://192.168.5.42:8091/
-        hour: 22 # is not applied if channel is set
-        day: 3 # is not applied if channel is set
+        floodgate:
+          hour: 22 # is not applied if channel is set
+          day: 3 # is not applied if channel is set
         label_selectors:
-          - {key: plan.upgrade.cattle.io/focal, operator: Exists}
+          plan.upgrade.cattle.io/focal: <1>
+            operator: Exists
         tolerations:
-          - key: node-role.kubernetes.io/controlplane
+          node-role.kubernetes.io/controlplane:
             operator: Exists
-          - key: node-role.kubernetes.io/etcd
+          node-role.kubernetes.io/etcd:
             operator: Exists
-      - name: system-upgrade-2
-        channel: something_else
-        label_selectors:
-          - tbd2
-```
+----
+<1> We recommend to use matching label selector and plan name.
+This minimizes the amount of labels added to nodes by the System Upgrade Controller.
+<2> Check the https://github.com/rancher/system-upgrade-controller#example-plans[official documentation] for supported fields in `spec`.
 
-Check the https://github.com/rancher/system-upgrade-controller#example-plans[official documentation] for more background details.
+
+This configuration results in the following `Plan` object:
+
+[source,yaml]
+----
+apiVersion: upgrade.cattle.io/v1
+kind: Plan
+metadata:
+  name: system-upgrade-focal
+spec:
+  channel: https://floodgate.syn.vshn.net/window/2/7
+  concurrency: 1
+  drain:
+    force: true
+  nodeSelector:
+    matchExpressions:
+      - key: plan.upgrade.cattle.io/system-upgrade-focal
+        operator: Exists
+  serviceAccountName: system-upgrade
+  tolerations:
+    - key: node-role.kubernetes.io/master
+      operator: Exists
+  upgrade:
+    args:
+      - platform-prometheus-pushgateway.syn-synsights.svc.cluster.local:9091
+    command:
+      - /scripts/run.sh
+    image: docker.io/projectsyn/suc-ubuntu-focal
+----

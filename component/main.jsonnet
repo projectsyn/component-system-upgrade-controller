@@ -153,49 +153,82 @@ local deployment = kube.Deployment('system-upgrade-controller') {
   },
 };
 
-local plan = [
+local optionalKey(p, k) =
+  if std.objectHas(p, k) then k;
 
-  local channel = (
-    if std.objectHas(p, 'channel') then
-      p.channel
+local convertLegacyPlan(p) = std.trace(
+  'Converting legacy SUC plan "%(name)s", please update your config' % p,
+  {
+    spec: {
+      concurrency: p.concurrency,
+      [optionalKey(p, 'channel')]: p.channel,
+      [optionalKey(p, 'version')]: p.version,
+      upgrade: {
+        image: p.image,
+        [optionalKey(p, 'command')]: p.command,
+        // todo verify old structure
+        [optionalKey(p, 'args')]: p.args,
+      },
+    },
+    [optionalKey(p, 'push_gateway')]: p.push_gateway,
+    label_selectors: {
+      [l.key]: l
+      for l in p.label_selectors
+    },
+    tolerations: {
+      [t.key]: t
+      for t in com.getValueOrDefault(p, 'tolerations', [])
+    },
+    floodgate: {
+      day: p.day,
+      hour: p.hour,
+    },
+  }
+);
+
+local planConfigs =
+  if !std.objectHas(params, 'plans') then
+    {}
+  else if std.isArray(params.plans) then
+    {
+      [p.name]: convertLegacyPlan(p)
+      for p in params.plans
+    }
+  else
+    params.plans;
+
+local plans = [
+  local p = planConfigs[pname];
+  local pspec = p.spec;
+
+  local fixup_command(command) =
+    if std.type(command) == 'string' then
+      [ command ]
+    else if std.type(command) == 'array' then
+      command
     else
-      params.floodgate_url + 'window/' + p.day + '/' + p.hour
-  );
+      error 'Field `spec.upgrade.command` of plan "%s" is not an array nor a string' % pname;
 
-  local args(p) =
-    if std.objectHas(p, 'args') then (
-      if std.type(p.args) == 'array' then
-        if std.objectHas(p, 'push_gateway') then
-          std.prune(p.args + [ p.push_gateway ])
-        else
-          p.args
-      else
-        error 'Field `args` of plan "%(name)s" is not an array' % p
-    ) else (
-      if std.objectHas(p, 'push_gateway') then
-        [ p.push_gateway ]
-      else
-        null
-    );
+  local tolerations = com.getValueOrDefault(p, 'tolerations', {});
 
-  local command(p) =
-    if std.objectHas(p, 'command') then (
-      if std.type(p.command) == 'string' then (
-        [ p.command ]
-      )
-      else (
-        if std.type(p.command) == 'array' then (
-          p.command
-        ) else
-          error 'Field `command` of plan "%(name)s" is not an array nor a string' % p
-      )
-    ) else
-      null;
+  local sp = suc.Plan(pname, p.label_selectors, tolerations) {
+    spec+: com.makeMergeable(p.spec),
+  };
+  local needsFG = !std.objectHas(sp.spec, 'channel') && !std.objectHas(sp.spec, 'version');
 
-  local version = if std.objectHas(p, 'version') then p.version;
+  sp {
+    spec+: {
+      [if needsFG then 'channel']: suc.floodgate_channel(p.floodgate),
+      upgrade+: {
+        command: fixup_command(super.command),
+        [if std.objectHas(p, 'push_gateway') then 'args']+:
+          [ p.push_gateway ],
+      },
+    },
+  }
 
-  suc.Plan(p.name, channel, version, p.label_selectors, p.concurrency, p.tolerations, p.image, command(p), args(p))
-  for p in params.plans
+  for pname in std.sort(std.objectFields(planConfigs))
+  if planConfigs[pname] != null
 ];
 
 local controller_definition = {
@@ -208,7 +241,7 @@ local controller_definition = {
 };
 
 local plans_definition = {
-  '05_plans': plan,
+  '05_plans': plans,
 };
 
 if params.plans_only then

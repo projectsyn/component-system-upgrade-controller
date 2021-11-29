@@ -1,37 +1,54 @@
+local com = import 'lib/commodore.libjsonnet';
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.system_upgrade_controller;
-{
-  Plan(name, channel, version, label_selectors, concurrency, tolerations, image, command, args):
 
-    kube._Object('upgrade.cattle.io/v1', 'Plan', name) {
-      metadata+: {
-        namespace: params.namespace,
-        annotations+: {
-          'argocd.argoproj.io/sync-options': 'SkipDryRunOnMissingResource=true',
-        },
-        labels+: {
-          'app.kubernetes.io/managed-by': 'syn',
-        },
+
+local floodgate_channel(fgspec) =
+  local url = com.getValueOrDefault(fgspec, 'url', params.floodgate_url);
+  local basepath = com.getValueOrDefault(fgspec, 'basepath', 'window');
+  '%(url)s/%(basepath)s/%(day)s/%(hour)s' % fgspec {
+    url: url,
+    basepath: basepath,
+  };
+
+local plan(name, labelSelectorDict, tolerationDict) =
+  local label_selectors = [
+    labelSelectorDict[l] { key: l }
+    for l in std.objectFields(labelSelectorDict)
+    if labelSelectorDict[l] != null
+  ];
+  local tolerations = [
+    tolerationDict[t] { key: t }
+    for t in std.objectFields(tolerationDict)
+    if tolerationDict[t] != null
+  ];
+
+
+  kube._Object('upgrade.cattle.io/v1', 'Plan', name) {
+    metadata+: {
+      namespace: params.namespace,
+      annotations+: {
+        'argocd.argoproj.io/sync-options': 'SkipDryRunOnMissingResource=true',
       },
-      spec: {
-        concurrency: concurrency,
-        nodeSelector: {
-          matchExpressions: label_selectors,
-        },
-        serviceAccountName: params.service_account,
-        tolerations: tolerations,
-        drain: {
-          force: true,
-        },
-        [if channel != null then 'channel']: channel,
-        [if version != null then 'version']: version,
-        upgrade: {
-          image: image,
-          [if command != null then 'command']: command,
-          [if args != null then 'args']: args,
-        },
+      labels+: {
+        'app.kubernetes.io/managed-by': 'syn',
       },
     },
+    spec: {
+      nodeSelector: {
+        matchExpressions: label_selectors,
+      },
+      serviceAccountName: params.service_account,
+      tolerations: tolerations,
+      drain: {
+        force: true,
+      },
+    },
+  };
+
+{
+  Plan: plan,
+  floodgate_channel: floodgate_channel,
 }
