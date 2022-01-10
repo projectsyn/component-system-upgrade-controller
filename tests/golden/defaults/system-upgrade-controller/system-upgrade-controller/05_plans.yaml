@@ -5,6 +5,38 @@ metadata:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
   labels:
     app.kubernetes.io/managed-by: syn
+    name: k3s
+  name: k3s
+  namespace: syn-system-upgrade-controller
+spec:
+  channel: null
+  concurrency: 1
+  cordon: true
+  drain:
+    force: true
+  image: docker.io/rancher/k3s-upgrade
+  nodeSelector:
+    matchExpressions:
+      - key: k3s.io/hostname
+        operator: Exists
+  serviceAccountName: system-upgrade
+  tolerations:
+    - key: node-role.kubernetes.io/controlplane
+      operator: Exists
+    - key: node-role.kubernetes.io/master
+      operator: In
+      values:
+        - 'true'
+  upgrade: {}
+  version: v1.20.12+k3s1
+---
+apiVersion: upgrade.cattle.io/v1
+kind: Plan
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  labels:
+    app.kubernetes.io/managed-by: syn
     name: system-upgrade-bionic
   name: system-upgrade-bionic
   namespace: syn-system-upgrade-controller

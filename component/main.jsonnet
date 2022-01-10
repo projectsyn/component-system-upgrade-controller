@@ -215,12 +215,13 @@ local plans = [
     spec+: com.makeMergeable(p.spec),
   };
   local needsFG = !std.objectHas(sp.spec, 'channel') && !std.objectHas(sp.spec, 'version');
+  local hasCmd = std.objectHas(sp.spec, 'upgrade') && std.objectHas(sp.spec.upgrade, 'command');
 
   sp {
     spec+: {
       [if needsFG then 'channel']: suc.floodgate_channel(p.floodgate),
       upgrade+: {
-        command: fixup_command(super.command),
+        [if hasCmd then 'command']: fixup_command(super.command),
         [if std.objectHas(p, 'push_gateway') then 'args']+:
           [ p.push_gateway ],
       },

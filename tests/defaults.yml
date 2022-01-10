@@ -39,3 +39,20 @@ parameters:
           plan.upgrade.cattle.io/system-upgrade-bionic:
             operator: Exists
         tolerations: ${system_upgrade_controller:plan_tolerations}
+      k3s:
+        spec:
+          concurrency: 1
+          version: v1.20.12+k3s1
+          channel: null
+          serviceAccountName: system-upgrade
+          cordon: true
+          image: docker.io/rancher/k3s-upgrade
+        label_selectors:
+          k3s.io/hostname:
+            operator: Exists
+        tolerations:
+          node-role.kubernetes.io/controlplane:
+            operator: Exists
+          node-role.kubernetes.io/master:
+            operator: In
+            values: ["true"]
