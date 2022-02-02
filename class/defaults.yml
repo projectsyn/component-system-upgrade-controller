@@ -1,5 +1,10 @@
 parameters:
   system_upgrade_controller:
+    images:
+      system_upgrade_controller:
+        registry: docker.io
+        repository: rancher/system-upgrade-controller
+        tag: v0.6.2
     plans_only: false
     controller_threads: "2"
     affinity: {}
@@ -13,6 +18,5 @@ parameters:
     namespace: syn-system-upgrade-controller
     service_account: system-upgrade
     plan_polling_interval: "15m"
-    suc_image: docker.io/rancher/system-upgrade-controller:v0.6.2
     floodgate_url: https://floodgate.syn.vshn.net
     disable_grafana_dashboard: false

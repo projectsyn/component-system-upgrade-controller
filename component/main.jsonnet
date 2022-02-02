@@ -9,6 +9,8 @@ local inv = kap.inventory();
 // The hiera parameters for the component
 local params = inv.parameters.system_upgrade_controller;
 
+local sucImage = '%(registry)s/%(repository)s:%(tag)s' % params.images.system_upgrade_controller;
+
 local namespace = kube.Namespace(params.namespace);
 
 local serviceaccount = kube.ServiceAccount(params.service_account) {
@@ -110,7 +112,7 @@ local deployment = kube.Deployment('system-upgrade-controller') {
                 },
               },
             ],
-            image: params.suc_image,
+            image: sucImage,
             imagePullPolicy: 'IfNotPresent',
             resources+: {
               requests: {
