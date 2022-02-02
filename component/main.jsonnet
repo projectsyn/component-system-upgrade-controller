@@ -9,7 +9,17 @@ local inv = kap.inventory();
 // The hiera parameters for the component
 local params = inv.parameters.system_upgrade_controller;
 
-local sucImage = '%(registry)s/%(repository)s:%(tag)s' % params.images.system_upgrade_controller;
+local sucImage =
+  if std.objectHas(params, 'suc_image') then
+    std.trace(
+      (
+        '\nParameter `suc_image` is deprecated.\n' +
+        'Please update your config to use `images.system_upgrade_controller` instead.'
+      ),
+      params.suc_image
+    )
+  else
+    '%(registry)s/%(repository)s:%(tag)s' % params.images.system_upgrade_controller;
 
 local namespace = kube.Namespace(params.namespace);
 
