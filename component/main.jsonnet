@@ -3,7 +3,7 @@ local dashboard = import 'grafana_dashboard.jsonnet';
 local com = import 'lib/commodore.libjsonnet';
 local kap = import 'lib/kapitan.libjsonnet';
 local kube = import 'lib/kube.libjsonnet';
-local suc = import 'lib/suc.libjsonnet';
+local suc = import 'lib/system-upgrade-controller.libjsonnet';
 
 local inv = kap.inventory();
 // The hiera parameters for the component
