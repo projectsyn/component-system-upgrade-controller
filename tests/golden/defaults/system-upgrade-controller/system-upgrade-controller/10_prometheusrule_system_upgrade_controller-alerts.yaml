@@ -1,0 +1,27 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  annotations: {}
+  labels:
+    name: system-upgrade-controller-alert-rules
+    prometheus: platform
+    role: alert-rules
+  name: system-upgrade-controller-alert-rules
+  namespace: syn-synsights
+spec:
+  groups:
+    - name: system-upgrade-controller.rules
+      rules:
+        - alert: SYN_SystemUpgradeControllerMaintenanceHalted
+          annotations:
+            description: system-upgrade-controller has stopped because the node {{
+              $labels.node }} cannot be drained. Check job logs for more information.
+            message: Maintenance halted
+            runbook_url: https://hub.syn.tools/systen-upgrade-controller/runbooks/SystemUpgradeControllerMaintenanceHalted.html
+            severity_level: warning
+          expr: kube_node_spec_unschedulable >= 1
+          for: 15m
+          labels:
+            severity: warning
+            syn: 'true'
+            syn_component: system-upgrade-controller

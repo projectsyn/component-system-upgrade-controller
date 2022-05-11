@@ -8,7 +8,7 @@ parameters:
     plans_only: false
     controller_threads: "2"
     affinity: {}
-    debug_logging: 'false'
+    debug_logging: "false"
     job_backoff_limit: "3"
     job_deadline_seconds: "900"
     job_image_pull_policy: "Always"
@@ -20,3 +20,6 @@ parameters:
     plan_polling_interval: "15m"
     floodgate_url: https://floodgate.syn.vshn.net
     disable_grafana_dashboard: false
+    monitoring:
+      enabled: true
+      prometheusRuleNamespace: syn-synsights
