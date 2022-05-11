@@ -1,2 +1,6 @@
 * xref:index.adoc[Home]
 * xref:references/parameters.adoc[Parameters]
+
+.Alert runbooks
+
+* xref:runbooks/SystemUpgradeControllerMaintenanceHalted.adoc[SystemUpgradeControllerMaintenanceHalted]

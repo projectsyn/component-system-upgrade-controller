@@ -1,0 +1,26 @@
+= Alert rule: SystemUpgradeControllerMaintenanceHalted
+
+include::partial$runbooks/contribution_note.adoc[]
+
+== icon:glasses[] Overview
+
+This alert fires when a node remains unschedulable for 15 minutes.
+This is mostly caused because the node cannot be drained.
+To resolve this alert, check the logs for the system-upgrade-controller job on the node.
+
+
+== icon:bug[] Steps for debugging
+
+Get the Pod name for the job on the node:
+
+[source,console]
+----
+kubectl get pods -n cattle-system
+----
+
+Check the logs for the system-upgrade-controller job on the node:
+
+[source,console]
+----
+kubectl logs -n cattle-system -c drain <pod-name>
+----
