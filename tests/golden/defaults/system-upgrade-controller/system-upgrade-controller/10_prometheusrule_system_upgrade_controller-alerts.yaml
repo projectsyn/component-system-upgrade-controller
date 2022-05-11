@@ -14,14 +14,15 @@ spec:
       rules:
         - alert: SYN_SystemUpgradeControllerMaintenanceHalted
           annotations:
-            description: system-upgrade-controller has stopped because the node {{
+            description:
+              system-upgrade-controller has stopped because the node {{
               $labels.node }} cannot be drained. Check job logs for more information.
             message: Maintenance halted
-            runbook_url: https://hub.syn.tools/systen-upgrade-controller/runbooks/SystemUpgradeControllerMaintenanceHalted.html
+            runbook_url: https://hub.syn.tools/system-upgrade-controller/runbooks/SystemUpgradeControllerMaintenanceHalted.html
             severity_level: warning
           expr: kube_node_spec_unschedulable >= 1
           for: 15m
           labels:
             severity: warning
-            syn: 'true'
+            syn: "true"
             syn_component: system-upgrade-controller

@@ -5,7 +5,7 @@ include::partial$runbooks/contribution_note.adoc[]
 == icon:glasses[] Overview
 
 This alert fires when a node remains unschedulable for 15 minutes.
-This is mostly caused because the node cannot be drained.
+This is mostly caused because the node can't be drained.
 To resolve this alert, check the logs for the system-upgrade-controller job on the node.
 
 

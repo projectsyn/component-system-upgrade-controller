@@ -29,7 +29,7 @@ local alert_rules =
               annotations: {
                 message: 'Maintenance halted',
                 description: 'system-upgrade-controller has stopped because the node {{ $labels.node }} cannot be drained. Check job logs for more information.',
-                runbook_url: 'https://hub.syn.tools/systen-upgrade-controller/runbooks/SystemUpgradeControllerMaintenanceHalted.html',
+                runbook_url: 'https://hub.syn.tools/system-upgrade-controller/runbooks/SystemUpgradeControllerMaintenanceHalted.html',
                 severity_level: 'warning',
               },
             },
