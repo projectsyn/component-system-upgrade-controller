@@ -14,8 +14,7 @@ spec:
       rules:
         - alert: SYN_SystemUpgradeControllerMaintenanceHalted
           annotations:
-            description:
-              system-upgrade-controller has stopped because the node {{
+            description: system-upgrade-controller has stopped because the node {{
               $labels.node }} cannot be drained. Check job logs for more information.
             message: Maintenance halted
             runbook_url: https://hub.syn.tools/system-upgrade-controller/runbooks/SystemUpgradeControllerMaintenanceHalted.html
@@ -24,5 +23,5 @@ spec:
           for: 15m
           labels:
             severity: warning
-            syn: "true"
+            syn: 'true'
             syn_component: system-upgrade-controller
