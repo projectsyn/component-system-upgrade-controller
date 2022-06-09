@@ -2,7 +2,3 @@
   componentName: system-upgrade-controller
   githubUrl: https://github.com/projectsyn/component-system-upgrade-controller
   feature_goldenTests: true
-
-docs/antora.yml:
-  name: system-upgrade-controller
-  title: system-upgrade-controller
