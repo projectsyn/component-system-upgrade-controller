@@ -4,7 +4,7 @@ parameters:
       system_upgrade_controller:
         registry: docker.io
         repository: rancher/system-upgrade-controller
-        tag: v0.9.1
+        tag: v0.13.1
     plans_only: false
     controller_threads: "2"
     affinity: {}
