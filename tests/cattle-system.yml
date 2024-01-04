@@ -1,0 +1,3 @@
+parameters:
+  system_upgrade_controller:
+    namespace: cattle-system

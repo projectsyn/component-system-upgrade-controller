@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/instance: c-green-test-1234
+    app.kubernetes.io/managed-by: syn
+    app.kubernetes.io/name: system-upgrade-controller
+    name: system-upgrade-controller
+  name: system-upgrade-controller
+  namespace: cattle-system
+spec:
+  minReadySeconds: 30
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      upgrade.cattle.io/controller: system-upgrade-controller
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        upgrade.cattle.io/controller: system-upgrade-controller
+    spec:
+      affinity: {}
+      containers:
+        - args: []
+          env:
+            - name: SYSTEM_UPGRADE_CONTROLLER_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['upgrade.cattle.io/controller']
+            - name: SYSTEM_UPGRADE_CONTROLLER_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          envFrom:
+            - configMapRef:
+                name: default-controller-env
+          image: docker.io/rancher/system-upgrade-controller:v0.13.1
+          imagePullPolicy: IfNotPresent
+          name: system-upgrade-controller
+          ports: []
+          resources:
+            limits:
+              cpu: 500m
+              memory: 128Mi
+            requests:
+              cpu: 250m
+              memory: 64Mi
+          stdin: false
+          tty: false
+          volumeMounts:
+            - mountPath: /etc/ssl
+              name: etc-ssl
+            - mountPath: /tmp
+              name: tmp
+      imagePullSecrets: []
+      initContainers: []
+      serviceAccountName: system-upgrade
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - hostPath:
+            path: /etc/ssl
+            type: Directory
+          name: etc-ssl
+        - emptyDir: {}
+          name: tmp
