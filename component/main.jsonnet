@@ -21,7 +21,20 @@ local sucImage =
   else
     '%(registry)s/%(repository)s:%(tag)s' % params.images.system_upgrade_controller;
 
-local namespace = kube.Namespace(params.namespace);
+local cattleSystemNamespaceNoPrune =
+  if params.namespace == 'cattle-system' then
+    {
+      metadata+: {
+        annotations+: {
+          'argocd.argoproj.io/sync-options': 'Prune=false',
+        },
+      },
+    }
+  else
+    {};
+
+local namespace = kube.Namespace(params.namespace) +
+                  cattleSystemNamespaceNoPrune;
 
 local serviceaccount = kube.ServiceAccount(params.service_account) {
   metadata+: {

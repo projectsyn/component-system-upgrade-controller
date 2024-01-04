@@ -7,7 +7,7 @@
       "name": "system-upgrade-controller",
       "slug": "system-upgrade-controller",
       "parameter_key": "system_upgrade_controller",
-      "test_cases": "defaults",
+      "test_cases": "defaults cattle-system",
       "add_lib": "y",
       "add_pp": "n",
       "add_golden": "y",
