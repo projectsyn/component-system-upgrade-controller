@@ -1,5 +1,7 @@
 parameters:
   system_upgrade_controller:
+    =_metadata:
+      multi_tenant: true
     images:
       system_upgrade_controller:
         registry: docker.io
